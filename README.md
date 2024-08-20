@@ -41,7 +41,6 @@ If you discover any security related issues, please email [info@javaabu.com](mai
 
 - [Javaabu Pvt. Ltd.](https://github.com/javaabu)
 - [Arushad Ahmed (@dash8x)](http://arushad.com)
-- [Arushad Ahmed (@dash8x)](https://github.com/dash8x)
 - [All Contributors](../../contributors)
 
 ## License
