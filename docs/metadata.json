@@ -1,5 +1,5 @@
 {
-    "name": "{Your Package}",
-    "description": "{package description}",
+    "name": "Exports",
+    "description": "Handles Laravel exports using maatwebsite/excel",
     "version": "1"
 }

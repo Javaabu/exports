@@ -1,10 +1,10 @@
 <?php
 
-namespace Javaabu\{YourPackage}\Tests;
+namespace Javaabu\Exports\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Javaabu\{YourPackage}\{YourPackage}ServiceProvider;
-use Javaabu\{YourPackage}\Tests\TestSupport\Providers\TestServiceProvider;
+use Javaabu\Exports\ExportsServiceProvider;
+use Javaabu\Exports\Tests\TestSupport\Providers\TestServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -22,7 +22,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            {YourPackage}ServiceProvider::class,
+            ExportsServiceProvider::class,
             TestServiceProvider::class
         ];
     }

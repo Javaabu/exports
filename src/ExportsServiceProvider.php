@@ -1,19 +1,17 @@
 <?php
 
-namespace Javaabu\Exports\Tests\TestSupport\Providers;
+namespace Javaabu\Exports;
 
 use Illuminate\Support\ServiceProvider;
 
-class TestServiceProvider extends ServiceProvider
+class ExportsServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
      */
     public function boot()
     {
-        $this->loadMigrationsFrom([
-            __DIR__ . '/../database',
-        ]);
+        // declare publishes
     }
 
     /**
@@ -21,6 +19,6 @@ class TestServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        // merge package config with user defined config
     }
 }

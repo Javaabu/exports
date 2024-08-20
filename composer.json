@@ -1,23 +1,24 @@
 {
-    "name": "javaabu/{your-package}",
-    "description": "{package description}",
-    "homepage": "https://github.com/Javaabu/{your-package}",
+    "name": "javaabu/exports",
+    "description": "Handles Laravel exports using maatwebsite/excel",
+    "homepage": "https://github.com/Javaabu/exports",
     "license": "MIT",
     "keywords": [
         "javaabu",
         "laravel",
-        "{your_package}"
+        "exports"
     ],
     "authors": [
         {
-            "name": "{author_name}",
-            "email": "{author_email}",
+            "name": "Arushad Ahmed",
+            "email": "arushad@javaabu.com",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/support": "^9.0 || ^10.0 || ^11.0"
+        "illuminate/support": "^9.0 || ^10.0 || ^11.0",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -26,12 +27,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Javaabu\\{YourPackage}\\": "src/"
+            "Javaabu\\Exports\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Javaabu\\{YourPackage}\\Tests\\": "tests/"
+            "Javaabu\\Exports\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -40,7 +41,7 @@
         },
         "laravel": {
             "providers": [
-                "Javaabu\\{YourPackage}\\{YourPackage}ServiceProvider"
+                "Javaabu\\Exports\\ExportsServiceProvider"
             ]
         }
     },
