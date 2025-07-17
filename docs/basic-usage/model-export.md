@@ -119,37 +119,6 @@ class UsersExport extends ModelExport
 }
 ```
 
-## Formatting a specific attribute
-
-To format a specific attribute in the exported file, override the `formatValue` method. Remember to call `parent::formatValue` to still maintain formatting for other attributes. 
-
-```php
-<?php
-
-namespace App\Exports;
-
-use Javaabu\Exports\ModelExport;
-use App\Models\User;
-
-class UsersExport extends ModelExport
-{
-
-    public function modelClass(): string
-    {
-        return User::class;
-    }
-    
-    public function formatValue(string $attribute, mixed $value): mixed
-    {
-        if ($attribute == 'role' && $value instance of \App\Models\Role::class) {
-            return $value->description;
-        }
-
-        return parent::formatValue($attribute, $value);
-    }
-}
-```
-
 ## Modifying the headings
 
 To modify the headings, override the `headings` method. Remember to include all the headings in the correct order and to include a heading for each allowed attribute.
