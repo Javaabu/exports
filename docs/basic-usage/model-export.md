@@ -108,7 +108,7 @@ class UsersExport extends ModelExport
         return User::class;
     }
     
-    public function formatValue(string $attribute, mixed $value): mixed
+    public function formatValue($model, string $attribute, mixed $value): mixed
     {
         if ($attribute == 'role' && $value instance of \App\Models\Role::class) {
             return $value->description;

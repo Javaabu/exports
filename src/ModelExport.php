@@ -82,25 +82,25 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
         $attributes = $model->only($this->allowedAttributes());
 
         foreach ($attributes as $attribute => $value) {
-            $attributes[$attribute] = $this->formatValue($attribute, $value);
+            $attributes[$attribute] = $this->formatValue($model, $attribute, $value);
         }
 
         return array_values($attributes);
     }
 
-    public function isAdminModel(string $attribute, mixed $value): bool
+    public function isAdminModel($model, string $attribute, mixed $value): bool
     {
         return $value instanceof Model && method_exists($value, 'getAdminLinkNameAttribute');
     }
 
-    public function isAdminModelCollection(string $attribute, mixed $value): bool
+    public function isAdminModelCollection($model, string $attribute, mixed $value): bool
     {
         if (! $value instanceof Collection) {
             return false;
         }
 
         foreach ($value as $item) {
-            if (! $this->isAdminModel($attribute, $item)) {
+            if (! $this->isAdminModel($model, $attribute, $item)) {
                 return false;
             }
         }
@@ -108,13 +108,13 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
         return true;
     }
 
-    public function formatValue(string $attribute, mixed $value): mixed
+    public function formatValue($model, string $attribute, mixed $value): mixed
     {
         if ($value instanceof BackedEnum) {
             return $value->getEnumLabel();
-        } elseif ($this->isAdminModelCollection($attribute, $value)) {
+        } elseif ($this->isAdminModelCollection($model, $attribute, $value)) {
             return $value->implode('admin_link_name', ',');
-        } elseif ($this->isAdminModel($attribute, $value)) {
+        } elseif ($this->isAdminModel($model, $attribute, $value)) {
             return $value->admin_link_name;
         } elseif (is_bool($value)) {
             return $value ? 'True' : 'False';
