@@ -114,7 +114,7 @@ class UsersExport extends ModelExport
             return $value->description;
         }
 
-        return parent::formatValue($attribute, $value);
+        return parent::formatValue($model, $attribute, $value);
     }
 }
 ```
