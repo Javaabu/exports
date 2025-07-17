@@ -12,4 +12,12 @@ class UsersExport extends ModelExport
     {
         return User::class;
     }
+
+    public function relationsToInclude(): array
+    {
+        return [
+            'userRole',
+            'organizations',
+        ];
+    }
 }

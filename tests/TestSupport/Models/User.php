@@ -2,6 +2,8 @@
 
 namespace Javaabu\Exports\Tests\TestSupport\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,5 +31,15 @@ class User extends Authenticatable
     public function getMorphClass()
     {
         return 'user';
+    }
+
+    public function userRole(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class);
     }
 }

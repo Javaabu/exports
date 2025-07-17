@@ -5,6 +5,8 @@ namespace Javaabu\Exports\Tests\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Exports\Tests\TestCase;
 use Javaabu\Exports\Tests\TestSupport\Exports\UsersExport;
+use Javaabu\Exports\Tests\TestSupport\Models\Organization;
+use Javaabu\Exports\Tests\TestSupport\Models\Role;
 use Javaabu\Exports\Tests\TestSupport\Models\User;
 
 class ModelExportTest extends TestCase
@@ -33,16 +35,38 @@ class ModelExportTest extends TestCase
             'id',
             'email',
             'name',
+            'is_admin',
+            'role_id',
             'created_at',
             'updated_at',
             'deleted_at',
+            'userRole',
+            'organizations',
         ], $export->allowedAttributes());
     }
 
     /** @test */
     public function it_only_includes_allowed_attributes(): void
     {
-        $user = User::factory()->create();
+        $role = Role::factory()->create([
+            'name' => 'Test Role',
+        ]);
+
+        /** @var User $user */
+        $user = User::factory()->create([
+            'role_id' => $role->id,
+            'is_admin' => true,
+        ]);
+
+        $organization_1 = Organization::factory()->create([
+            'name' => 'Organization 1',
+        ]);
+
+        $organization_2 = Organization::factory()->create([
+            'name' => 'Organization 2',
+        ]);
+
+        $user->organizations()->sync([$organization_1->id, $organization_2->id]);
 
         $export = new UsersExport();
 
@@ -50,9 +74,13 @@ class ModelExportTest extends TestCase
             $user->id,
             $user->email,
             $user->name,
+            'True',
+            $user->role_id,
             $user->created_at,
             $user->updated_at,
             $user->deleted_at,
+            'Test Role',
+            'Organization 1,Organization 2',
         ], $export->map($user));
     }
 
@@ -65,9 +93,13 @@ class ModelExportTest extends TestCase
             'Id',
             'Email',
             'Name',
+            'Is Admin',
+            'Role Id',
             'Created At',
             'Updated At',
             'Deleted At',
+            'User Role',
+            'Organizations',
         ], $export->headings());
     }
 }

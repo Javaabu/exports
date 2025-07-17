@@ -7,6 +7,7 @@ namespace Javaabu\Exports;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -36,9 +37,6 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
      */
     public abstract function modelClass(): string;
 
-    /**
-     * Get the allowed attributes
-     */
     public function allowedAttributes(): array
     {
         $model_class = $this->modelClass();
@@ -46,7 +44,9 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
         /** @var Model $empty_model */
         $empty_model = (new $model_class());
 
-        return array_values(array_diff(\Schema::getColumnListing($empty_model->getTable()), $empty_model->getHidden()));
+        $attributes = array_values(array_diff(\Schema::getColumnListing($empty_model->getTable()), $empty_model->getHidden()));
+
+        return array_merge($attributes, $this->relationsToInclude());
     }
 
     /**
@@ -63,18 +63,69 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
         return $model_class::query();
     }
 
+    public function relationsToInclude(): array
+    {
+        return [];
+    }
+
     /**
      * @param  Model  $model
      */
     public function map($model): array
     {
-        return array_values($model->only($this->allowedAttributes()));
+        $attributes = $model->only($this->allowedAttributes());
+
+        foreach ($attributes as $attribute => $value) {
+            $attributes[$attribute] = $this->formatValue($attribute, $value);
+        }
+
+        return array_values($attributes);
+    }
+
+    public function isAdminModel(string $attribute, mixed $value): bool
+    {
+        return $value instanceof Model && method_exists($value, 'getAdminLinkNameAttribute');
+    }
+
+    public function isAdminModelCollection(string $attribute, mixed $value): bool
+    {
+        if (! $value instanceof Collection) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (! $this->isAdminModel($attribute, $item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function formatValue(string $attribute, mixed $value): mixed
+    {
+        if ($value instanceof BackedEnum) {
+            return $value->getEnumLabel();
+        } elseif ($this->isAdminModelCollection($attribute, $value)) {
+            return $value->implode('admin_link_name', ',');
+        } elseif ($this->isAdminModel($attribute, $value)) {
+            return $value->admin_link_name;
+        } elseif (is_bool($value)) {
+            return $value ? 'True' : 'False';
+        }
+
+        return $value;
     }
 
     public function headings(): array
     {
         return array_map(function ($slug) {
-            return Str::title(str_replace('_', ' ', $slug));
+            return Str::of($slug)
+                ->camel()
+                ->snake()
+                ->replace('_', ' ')
+                ->title()
+                ->toString();
         }, $this->allowedAttributes());
     }
 }
