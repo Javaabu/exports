@@ -60,7 +60,13 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
 
         $model_class = $this->modelClass();
 
-        return $model_class::query();
+        $query = $model_class::query();
+
+        if ($relations = $this->relationsToInclude()) {
+            $query->with($relations);
+        }
+
+        return $query;
     }
 
     public function relationsToInclude(): array
