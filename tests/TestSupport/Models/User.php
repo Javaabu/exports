@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Javaabu\Exports\Tests\TestSupport\Enums\UserStatuses;
 use Javaabu\Exports\Tests\TestSupport\Factories\UserFactory;
 
 class User extends Authenticatable
@@ -16,6 +17,10 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
+    ];
+
+    protected $casts = [
+        'status' => Userstatuses::class,
     ];
 
     protected static function newFactory()

@@ -3,6 +3,7 @@
 namespace Javaabu\Exports\Tests\TestSupport\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Javaabu\Exports\Tests\TestSupport\Enums\UserStatuses;
 use Javaabu\Exports\Tests\TestSupport\Models\User;
 
 class UserFactory extends Factory
@@ -16,6 +17,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'password' => $this->faker->password,
             'is_admin' => $this->faker->boolean,
+            'status' => $this->faker->randomElement(UserStatuses::cases()),
         ];
     }
 }

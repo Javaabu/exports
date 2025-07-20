@@ -14,6 +14,7 @@ class CreateUsersTable extends Migration {
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('status')->index();
             $table->timestamps();
             $table->softDeletes();
         });

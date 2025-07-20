@@ -5,6 +5,7 @@
 
 namespace Javaabu\Exports;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -108,10 +109,19 @@ abstract class ModelExport implements FromQuery, ShouldAutoSize, WithHeadings, W
         return true;
     }
 
+    public function getEnumLabel($model, string $attribute, mixed $value): ?string
+    {
+        if ($value instanceof BackedEnum) {
+            return method_exists($value, 'getLabel') ? $value->getLabel() : $value->name;
+        }
+
+        return '';
+    }
+
     public function formatValue($model, string $attribute, mixed $value): mixed
     {
         if ($value instanceof BackedEnum) {
-            return $value->getEnumLabel();
+            return $this->getEnumLabel($model, $attribute, $value);
         } elseif ($this->isAdminModelCollection($model, $attribute, $value)) {
             return $value->implode('admin_link_name', ',');
         } elseif ($this->isAdminModel($model, $attribute, $value)) {
