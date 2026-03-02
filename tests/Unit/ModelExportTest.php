@@ -13,8 +13,7 @@ class ModelExportTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_query_the_model(): void
+    public function test_it_can_query_the_model(): void
     {
         $user = User::factory()->create();
 
@@ -26,8 +25,7 @@ class ModelExportTest extends TestCase
         $this->assertTrue($result->contains('id', $user->id));
     }
 
-    /** @test */
-    public function it_can_determine_the_allowed_attributes(): void
+    public function test_it_can_determine_the_allowed_attributes(): void
     {
         $export = new UsersExport();
 
@@ -46,8 +44,7 @@ class ModelExportTest extends TestCase
         ], $export->allowedAttributes());
     }
 
-    /** @test */
-    public function it_only_includes_allowed_attributes(): void
+    public function test_it_only_includes_allowed_attributes(): void
     {
         $role = Role::factory()->create([
             'name' => 'Test Role',
@@ -86,8 +83,7 @@ class ModelExportTest extends TestCase
         ], $export->map($user));
     }
 
-    /** @test */
-    public function it_can_generate_headings(): void
+    public function test_it_can_generate_headings(): void
     {
         $export = new UsersExport();
 
