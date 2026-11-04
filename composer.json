@@ -41,8 +41,13 @@
     "require-dev": {
         "javaabu/boost-javaabu-guidelines": "^1.0",
         "laravel/pint": "^1.24",
+        "laravel/reverb": "^1.12",
         "orchestra/testbench": "^10.0 || ^11.0",
         "phpunit/phpunit": "^11.5.3 || ^12.5.8"
+    },
+    "suggest": {
+        "laravel/reverb": "Broadcasts export progress live; pages poll without it (^1.12)",
+        "inertiajs/inertia-laravel": "Renders the exports pages with Inertia React when exports.views is inertia (^2.0)"
     },
     "autoload": {
         "psr-4": {

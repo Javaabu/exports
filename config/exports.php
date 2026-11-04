@@ -239,6 +239,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Live progress
+    |--------------------------------------------------------------------------
+    |
+    | Progress is broadcast on private channels when enabled is true, or when
+    | it's 'auto' and laravel/reverb is installed with a real broadcaster as the
+    | default. Otherwise pages poll the show route every poll_interval ms.
+    | guards are the guards that authorize the channels (null: the defaults).
+    |
+    */
+
+    'broadcasting' => [
+        'enabled' => env('EXPORTS_BROADCASTING', 'auto'),
+        'channel' => 'exports',
+        'guards' => null,
+        'poll_interval' => 3000,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Views
     |--------------------------------------------------------------------------
     |

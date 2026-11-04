@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Javaabu\Exports\Commands\PruneExportsCommand;
 use Javaabu\Exports\Policies\ExportPolicy;
 use Javaabu\Exports\Routing\ExportRoutes;
+use Javaabu\Exports\Support\Broadcasting;
 use Javaabu\Permissions\Permissions;
 
 class ExportsServiceProvider extends ServiceProvider
@@ -23,6 +24,7 @@ class ExportsServiceProvider extends ServiceProvider
 
         $this->registerRouteMacros();
         $this->registerPermissions();
+        $this->registerBroadcastChannels();
 
         if ($this->app->runningInConsole()) {
             $this->registerMigrations();
@@ -59,6 +61,18 @@ class ExportsServiceProvider extends ServiceProvider
         ], label: 'Exports');
 
         Permissions::policy(Exports::exportModel(), config('exports.policy', ExportPolicy::class));
+    }
+
+    /**
+     * Authorize the progress channels when broadcasting is on (Reverb installed, or forced)
+     */
+    protected function registerBroadcastChannels(): void
+    {
+        if (! Broadcasting::enabled()) {
+            return;
+        }
+
+        Broadcasting::registerChannels();
     }
 
     protected function registerMigrations(): void

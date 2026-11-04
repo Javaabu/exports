@@ -17,3 +17,4 @@ All notable changes will be documented in this file.
 - `Route::exports()` registers the exports routes (index, store, show, download, cancel, destroy, signed download) with the app's prefix, name, guard and middleware. `ExportsController` answers JSON or renders pages, and can be replaced from config, the macro or the container.
 - `ExportPolicy` and the permissions `view_exports`, `view_others_exports`, `delete_exports`, `delete_others_exports`, registered with javaabu/permissions. Exports belong to any user model through a morph; nothing assumes the `web` guard.
 - `Exports::register('users', UsersExport::class)` lets the API start an export by name.
+- Live progress: export events broadcast on private channels (`exports.{uuid}`, `exports.owner.{type}.{id}`) when laravel/reverb is installed and broadcasting is on (`exports.broadcasting.enabled`: auto, true or false). The API tells pages whether to listen or to poll, and how often.

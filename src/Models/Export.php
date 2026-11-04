@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Javaabu\Exports\Enums\ExportStatuses;
 use Javaabu\Exports\Enums\Formats;
 use Javaabu\Exports\Events\ExportCancelled;
+use Javaabu\Exports\Support\Broadcasting;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
@@ -299,7 +300,19 @@ class Export extends Model
      */
     public function broadcastChannel(): string
     {
-        return config('exports.broadcasting.channel', 'exports') . ".{$this->uuid}";
+        return Broadcasting::channelPrefix() . ".{$this->uuid}";
+    }
+
+    /**
+     * The private broadcast channel for every export of this export's owner
+     */
+    public function ownerBroadcastChannel(): ?string
+    {
+        if (! $this->user_type || $this->user_id === null) {
+            return null;
+        }
+
+        return Broadcasting::channelPrefix() . '.owner.' . Broadcasting::encodeType($this->user_type) . ".{$this->user_id}";
     }
 
     public static function expiresAfterDays(): int
