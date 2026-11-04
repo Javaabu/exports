@@ -8,26 +8,28 @@ use Javaabu\Exports\Tests\TestSupport\Exports\UsersExport;
 use Javaabu\Exports\Tests\TestSupport\Models\Organization;
 use Javaabu\Exports\Tests\TestSupport\Models\Role;
 use Javaabu\Exports\Tests\TestSupport\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class ModelExportTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_query_the_model(): void
+    #[Test]
+    public function it_can_query_the_model(): void
     {
         $user = User::factory()->create();
 
-        $export = new UsersExport();
-
+        $export = new UsersExport;
 
         $result = $export->query()->get();
 
         $this->assertTrue($result->contains('id', $user->id));
     }
 
-    public function test_it_can_determine_the_allowed_attributes(): void
+    #[Test]
+    public function it_can_determine_the_allowed_attributes(): void
     {
-        $export = new UsersExport();
+        $export = new UsersExport;
 
         $this->assertEquals([
             'id',
@@ -44,13 +46,13 @@ class ModelExportTest extends TestCase
         ], $export->allowedAttributes());
     }
 
-    public function test_it_only_includes_allowed_attributes(): void
+    #[Test]
+    public function it_only_includes_allowed_attributes(): void
     {
         $role = Role::factory()->create([
             'name' => 'Test Role',
         ]);
 
-        /** @var User $user */
         $user = User::factory()->create([
             'role_id' => $role->id,
             'is_admin' => true,
@@ -66,7 +68,7 @@ class ModelExportTest extends TestCase
 
         $user->organizations()->sync([$organization_1->id, $organization_2->id]);
 
-        $export = new UsersExport();
+        $export = new UsersExport;
 
         $this->assertEquals([
             $user->id,
@@ -83,9 +85,10 @@ class ModelExportTest extends TestCase
         ], $export->map($user));
     }
 
-    public function test_it_can_generate_headings(): void
+    #[Test]
+    public function it_can_generate_headings(): void
     {
-        $export = new UsersExport();
+        $export = new UsersExport;
 
         $this->assertEquals([
             'Id',

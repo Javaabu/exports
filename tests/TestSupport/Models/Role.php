@@ -12,7 +12,7 @@ class Role extends Authenticatable
 
     protected static function newFactory()
     {
-        return new RoleFactory();
+        return new RoleFactory;
     }
 
     public function getMorphClass()

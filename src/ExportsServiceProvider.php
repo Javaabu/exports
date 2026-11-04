@@ -6,19 +6,24 @@ use Illuminate\Support\ServiceProvider;
 
 class ExportsServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
-    public function boot()
+    public function register(): void
     {
-        // declare publishes
+        $this->mergeConfigFrom(__DIR__ . '/../config/exports.php', 'exports');
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register()
+    public function boot(): void
     {
-        // merge package config with user defined config
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
+
+        if ($this->app->runningInConsole()) {
+            $this->registerPublishing();
+        }
+    }
+
+    protected function registerPublishing(): void
+    {
+        $this->publishes([
+            __DIR__ . '/../config/exports.php' => config_path('exports.php'),
+        ], 'exports-config');
     }
 }

@@ -1,12 +1,15 @@
 {
     "name": "javaabu/exports",
-    "description": "Handles Laravel exports using maatwebsite/excel",
+    "description": "Streaming model exports for Laravel: smart defaults, CSV, XLSX and ODS, background jobs and an exports UI with live progress",
     "homepage": "https://github.com/Javaabu/exports",
     "license": "MIT",
     "keywords": [
         "javaabu",
         "laravel",
-        "exports"
+        "exports",
+        "csv",
+        "xlsx",
+        "openspout"
     ],
     "authors": [
         {
@@ -16,14 +19,15 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/support": "^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
-        "maatwebsite/excel": "^3.1"
+        "php": "^8.4",
+        "illuminate/support": "^12.0 || ^13.0",
+        "openspout/openspout": "^5.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.14",
-        "orchestra/testbench": "^7.0 || ^8.0 || ^9.16 || ^10.0 || ^11.0",
-        "phpunit/phpunit": "^9.5 || ^10.5 || ^11.5.3 || ^12.5.8 || ^13.0.3"
+        "javaabu/boost-javaabu-guidelines": "^1.0",
+        "laravel/pint": "^1.24",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "phpunit/phpunit": "^11.5.3 || ^12.5.8"
     },
     "autoload": {
         "psr-4": {
@@ -35,15 +39,24 @@
             "Javaabu\\Exports\\Tests\\": "tests/"
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-clover build/coverage.xml",
+        "lint": "vendor/bin/pint --test",
+        "format": "vendor/bin/pint"
+    },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.0-dev"
+            "dev-next-gen": "2.x-dev"
         },
         "laravel": {
             "providers": [
                 "Javaabu\\Exports\\ExportsServiceProvider"
             ]
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true

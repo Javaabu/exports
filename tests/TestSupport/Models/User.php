@@ -2,10 +2,10 @@
 
 namespace Javaabu\Exports\Tests\TestSupport\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\Exports\Tests\TestSupport\Enums\UserStatuses;
 use Javaabu\Exports\Tests\TestSupport\Factories\UserFactory;
@@ -20,12 +20,12 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'status' => Userstatuses::class,
+        'status' => UserStatuses::class,
     ];
 
     protected static function newFactory()
     {
-        return new UserFactory();
+        return new UserFactory;
     }
 
     public function scopeSearch($query, $search)
