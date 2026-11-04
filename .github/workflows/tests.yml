@@ -45,10 +45,11 @@ jobs:
                 uses: actions/setup-node@v5
                 with:
                     node-version: 22
-                    cache: pnpm
 
+            # The default store is inside a node_modules folder, which breaks the declaration
+            # build of @javaabu/forms (installed from git and built on install)
             -   name: Install dependencies
-                run: pnpm install --frozen-lockfile
+                run: pnpm install --frozen-lockfile --store-dir "$RUNNER_TEMP/pnpm-store"
 
             -   name: Typecheck
                 run: pnpm typecheck

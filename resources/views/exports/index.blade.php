@@ -49,7 +49,7 @@
             <x-forms::submit color="secondary" :animate="false">{{ __('Filter') }}</x-forms::submit>
         </x-forms::form>
 
-        <x-forms::table model="exports" no-checkbox no-bulk>
+        <x-forms::table model="exports" no-checkbox>
             <x-slot:headers>
                 <x-forms::table.heading :label="__('Name')" />
                 <x-forms::table.heading :label="__('Format')" />
