@@ -88,6 +88,7 @@ class Broadcasting
             'id' => $export->uuid,
             'status' => $export->status->value,
             'status_label' => $export->status->label(),
+            'status_color' => $export->status->color(),
             'progress' => $export->progress(),
             'total_rows' => $export->total_rows,
             'processed_rows' => $export->processed_rows,

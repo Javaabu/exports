@@ -60,7 +60,7 @@ enum Formats: string
     }
 
     /**
-     * The formats enabled in `config('exports.formats')`
+     * The formats enabled in `config('exports.formats')`, in that order
      *
      * @return array<int, self>
      */
@@ -68,9 +68,9 @@ enum Formats: string
     {
         $enabled = config('exports.formats', [self::XLSX->value, self::CSV->value, self::ODS->value]);
 
-        return array_values(array_filter(
-            self::cases(),
-            fn (self $format) => in_array($format->value, $enabled, true),
-        ));
+        return array_values(array_filter(array_map(
+            fn (string $format) => self::tryFrom(strtolower($format)),
+            array_unique($enabled),
+        )));
     }
 }

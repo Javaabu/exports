@@ -6,6 +6,8 @@ use Javaabu\Exports\ExportsServiceProvider;
 use Javaabu\Exports\Tests\TestSupport\Models\Admin;
 use Javaabu\Exports\Tests\TestSupport\Models\User;
 use Javaabu\Exports\Tests\TestSupport\Providers\TestServiceProvider;
+use Javaabu\Forms\FormsServiceProvider;
+use Javaabu\Manifest\ManifestServiceProvider;
 use Javaabu\Permissions\Models\Permission;
 use Javaabu\Permissions\Models\Role;
 use Javaabu\Permissions\PermissionsServiceProvider;
@@ -54,6 +56,8 @@ abstract class TestCase extends BaseTestCase
         return [
             PermissionServiceProvider::class,
             PermissionsServiceProvider::class,
+            ManifestServiceProvider::class,
+            FormsServiceProvider::class,
             ExportsServiceProvider::class,
             TestServiceProvider::class,
         ];

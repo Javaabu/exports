@@ -22,6 +22,20 @@ enum ExportStatuses: string
     }
 
     /**
+     * The javaabu/forms status colour
+     */
+    public function color(): string
+    {
+        return match ($this) {
+            self::PENDING => 'secondary',
+            self::PROCESSING => 'info',
+            self::COMPLETED => 'success',
+            self::FAILED => 'danger',
+            self::CANCELLED => 'warning',
+        };
+    }
+
+    /**
      * Whether the export has stopped, successfully or not
      */
     public function isFinished(): bool

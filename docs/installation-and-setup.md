@@ -81,6 +81,8 @@ use Javaabu\Exports\Exports;
 Exports::register('users', UsersExport::class);
 ```
 
+The pages extend your `layouts.app` layout (`exports.layout`) and need manifest's Vite plugin for live progress; for Inertia React, set `exports.views` to `inertia`. See [Overriding controllers and views](advanced-usage/overriding-controllers-and-views.md#setting-up-the-pages).
+
 See [Exports page and API](basic-usage/exports-page-and-api.md).
 
 # Cleaning up

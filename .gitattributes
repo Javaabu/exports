@@ -12,3 +12,8 @@
 /tests              export-ignore
 /AGENTS.md          export-ignore
 /CLAUDE.md          export-ignore
+/node_modules       export-ignore
+/package.json       export-ignore
+/pnpm-lock.yaml     export-ignore
+/tsconfig.json      export-ignore
+/vitest.config.ts   export-ignore

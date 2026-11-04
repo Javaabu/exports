@@ -270,6 +270,14 @@ return [
     'views' => env('EXPORTS_VIEWS', 'blade'),
 
     /*
+    | The Blade layout the pages extend, and the section they fill.
+    */
+
+    'layout' => 'layouts.app',
+
+    'layout_section' => 'content',
+
+    /*
     |--------------------------------------------------------------------------
     | Controllers and authorization
     |--------------------------------------------------------------------------

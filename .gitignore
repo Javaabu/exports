@@ -5,3 +5,4 @@ coverage
 .phpunit.result.cache
 .phpunit.cache
 .idea
+node_modules

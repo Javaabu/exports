@@ -174,4 +174,13 @@ Content-Type: application/json
 
 # Pages
 
-Without `Accept: application/json`, `index` and `show` render a page, and `store`, `cancel` and `destroy` redirect back with a `success` or `error` flash message. Which stack renders them is set by `exports.views`: `blade` (default) or `inertia`. See [Overriding controllers and views](../advanced-usage/overriding-controllers-and-views.md) for the data each page gets.
+Without `Accept: application/json`, `index` and `show` render a page, and `store`, `cancel` and `destroy` redirect with a `success` or `error` flash message.
+
+| Page | Blade view | Inertia page |
+| --- | --- | --- |
+| List, with the form to start an export | `exports::exports.index` | `exports::Exports/Index` |
+| One export | `exports::exports.show` | `exports::Exports/Show` |
+
+The list shows each export's name, file name, format, status, a progress bar, rows, who started it (for users who see others' exports), when, and download, cancel and delete buttons. Rows update live while exports run, then the page reloads to show the download button.
+
+Which stack renders them is set by `exports.views`: `blade` (default) or `inertia`. Both need a little setup in the app (a layout, or the Inertia page resolver, and manifest's Vite plugin). See [Overriding controllers and views](../advanced-usage/overriding-controllers-and-views.md), which also lists every page prop.

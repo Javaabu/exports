@@ -8,10 +8,14 @@ use Javaabu\Exports\Commands\PruneExportsCommand;
 use Javaabu\Exports\Policies\ExportPolicy;
 use Javaabu\Exports\Routing\ExportRoutes;
 use Javaabu\Exports\Support\Broadcasting;
+use Javaabu\Manifest\Concerns\RegistersAssets;
+use Javaabu\Manifest\Package;
 use Javaabu\Permissions\Permissions;
 
 class ExportsServiceProvider extends ServiceProvider
 {
+    use RegistersAssets;
+
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/exports.php', 'exports');
@@ -22,6 +26,7 @@ class ExportsServiceProvider extends ServiceProvider
         $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'exports');
 
+        $this->registerFrontendAssets();
         $this->registerRouteMacros();
         $this->registerPermissions();
         $this->registerBroadcastChannels();
@@ -34,6 +39,29 @@ class ExportsServiceProvider extends ServiceProvider
                 PruneExportsCommand::class,
             ]);
         }
+    }
+
+    /**
+     * The Inertia pages (exports::Exports/Index), the components apps can import as
+     *
+     * @javaabu/exports, and the progress script the Blade pages load
+     */
+    protected function registerFrontendAssets(): void
+    {
+        $this->registerAssets('exports', __DIR__ . '/../resources', function (Package $package) {
+            $package
+                ->script('progress', 'js/progress.ts')
+                ->js()
+                ->pages()
+                ->npm([
+                    '@javaabu/forms' => 'github:Javaabu/react-forms#next-gen',
+                    '@javaabu/onu' => '^0.2.1',
+                ], peer_dependencies: [
+                    'react' => '^18.3 || ^19.0',
+                    'react-dom' => '^18.3 || ^19.0',
+                    '@inertiajs/react' => '^2.0 || ^3.0',
+                ]);
+        });
     }
 
     protected function registerRouteMacros(): void

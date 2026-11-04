@@ -83,6 +83,7 @@ class ExportsController extends Controller
                 ->map(fn (ExportStatuses $status) => ['value' => $status->value, 'label' => $status->label()])
                 ->all(),
             ...$this->meta($request),
+            'strings' => $this->views->isInertia() ? $this->strings() : null,
             'title' => __('Exports'),
         ]);
     }
@@ -129,6 +130,7 @@ class ExportsController extends Controller
                 ? (new ExportResource($export->load('user')))->resolve($request)
                 : $export,
             ...$this->meta($request),
+            'strings' => $this->views->isInertia() ? $this->strings() : null,
             'title' => $export->name,
         ]);
     }
@@ -273,6 +275,50 @@ class ExportsController extends Controller
             'broadcasting' => Broadcasting::enabled(),
             'poll_interval' => Broadcasting::pollInterval(),
             'routes' => $this->routeNames($request),
+            'urls' => [
+                'index' => route($this->routeName($request, 'index')),
+                'store' => route($this->routeName($request, 'store')),
+            ],
+        ];
+    }
+
+    /**
+     * The translated text of the pages, for the Inertia pages (Blade views use __() directly)
+     *
+     * @return array<string, string>
+     */
+    protected function strings(): array
+    {
+        return [
+            'title' => __('Exports'),
+            'new_export' => __('New export'),
+            'export' => __('Export'),
+            'format' => __('Format'),
+            'start' => __('Start export'),
+            'status' => __('Status'),
+            'all_statuses' => __('All statuses'),
+            'only_mine' => __('Only my exports'),
+            'filter' => __('Filter'),
+            'name' => __('Name'),
+            'progress' => __('Progress'),
+            'rows' => __('Rows'),
+            'started_by' => __('Started by'),
+            'created' => __('Created'),
+            'expires' => __('Expires'),
+            'actions' => __('Actions'),
+            'download' => __('Download'),
+            'cancel' => __('Cancel'),
+            'delete' => __('Delete'),
+            'confirm_cancel' => __('Cancel this export?'),
+            'confirm_delete' => __('Delete this export and its file?'),
+            'no_exports' => __('No exports yet'),
+            'no_exports_message' => __('Exports you start will appear here.'),
+            'rows_of' => __(':processed of :total rows'),
+            'rows_written' => __(':count rows'),
+            'error' => __('Error'),
+            'back' => __('Back to exports'),
+            'file' => __('File'),
+            'size' => __('Size'),
         ];
     }
 

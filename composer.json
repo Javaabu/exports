@@ -21,6 +21,14 @@
     "repositories": [
         {
             "type": "vcs",
+            "url": "https://github.com/Javaabu/forms"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Javaabu/manifest"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/Javaabu/permissions"
         }
     ],
@@ -34,11 +42,14 @@
         "illuminate/queue": "^12.0 || ^13.0",
         "illuminate/routing": "^12.0 || ^13.0",
         "illuminate/support": "^12.0 || ^13.0",
+        "javaabu/forms": "^2.0@dev",
+        "javaabu/manifest": "^1.0@dev",
         "javaabu/permissions": "^3.0@dev",
         "laravel/serializable-closure": "^2.0",
         "openspout/openspout": "^5.0"
     },
     "require-dev": {
+        "inertiajs/inertia-laravel": "^2.0",
         "javaabu/boost-javaabu-guidelines": "^1.0",
         "laravel/pint": "^1.24",
         "laravel/reverb": "^1.12",

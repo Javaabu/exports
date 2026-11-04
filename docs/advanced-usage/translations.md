@@ -19,6 +19,10 @@ To change a translation, add the same key to your app's `lang/dv.json`. App line
 - XLSX sheets are right-to-left when the locale is in `exports.rtl_locales` (or `exports.rtl` is `true`).
 - File names may be in Thaana: `ބޭނުންތެރިން.xlsx`. Downloads send them with `filename*` (RFC 6266).
 
+# Right-to-left pages
+
+The Blade and React pages use logical utilities only (`ms-`, `pe-`, `start-`, `text-start`, `inline-size`), so they mirror when the page is `dir="rtl"`; a test rejects physical ones. Progress bars fill from the inline start. File names and other free text get `dir="auto"`.
+
 # Strings for review
 
 These Dhivehi translations were written by the package authors and should be checked by a native speaker:
@@ -33,3 +37,8 @@ These Dhivehi translations were written by the package authors and should be che
 | View other users' exports | އެހެން ފަރާތްތަކުގެ އެކްސްޕޯޓްތައް ބެލުން | "Other parties'" |
 | Your :name export could not be completed… | ތިބާގެ :name އެކްސްޕޯޓް ނިންމޭކަށް ނުކެރުނު… | Tone of the apology |
 | Your export has started. We will let you know when it is ready. | އެކްސްޕޯޓް ފެށިއްޖެ. ތައްޔާރުވުމުން އަންގާނަން. | |
+| Progress | ކުރިއެރުން | Literally "advancement"; ޕްރޮގްރެސް is also used |
+| Started by | ފެށީ | Column heading for who started the export |
+| Actions | ޢަމަލުތައް | |
+| Filter | ފިލްޓަރ | Loanword |
+| :processed of :total rows | :total ރޯގެ ތެރެއިން :processed | "Rows" as ރޯ (loanword) |

@@ -31,6 +31,7 @@ class ExportResource extends JsonResource
             'format_label' => $this->format->label(),
             'status' => $this->status->value,
             'status_label' => $this->status->label(),
+            'status_color' => $this->status->color(),
             'progress' => $this->progress(),
             'total_rows' => $this->total_rows,
             'processed_rows' => $this->processed_rows,
