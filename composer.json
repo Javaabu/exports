@@ -41,6 +41,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
+        "benchmark": "vendor/bin/phpunit --group benchmark",
         "test-coverage": "vendor/bin/phpunit --coverage-clover build/coverage.xml",
         "lint": "vendor/bin/pint --test",
         "format": "vendor/bin/pint"

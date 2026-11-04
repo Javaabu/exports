@@ -21,9 +21,12 @@ class User extends Authenticatable
 
     protected $casts = [
         'status' => UserStatuses::class,
+        'is_admin' => 'boolean',
+        'birthday' => 'date',
+        'settings' => 'array',
     ];
 
-    protected static function newFactory()
+    protected static function newFactory(): UserFactory
     {
         return new UserFactory;
     }
@@ -43,8 +46,18 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function organizations(): BelongsToMany
     {
         return $this->belongsToMany(Organization::class);
+    }
+
+    public function greeting(): string
+    {
+        return "ހެލޯ {$this->name}";
     }
 }

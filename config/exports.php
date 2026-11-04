@@ -58,13 +58,49 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default columns
+    |--------------------------------------------------------------------------
+    |
+    | When an export doesn't list its columns, it includes the model's table
+    | columns except hidden attributes and these names (patterns allowed).
+    | Timestamps (created_at, updated_at, deleted_at) are included unless
+    | timestamps is false. With resolve_foreign_keys, a foreign key such as
+    | role_id is replaced by its BelongsTo relation (role) when the model
+    | defines one, and the related model is shown by its name.
+    |
+    */
+
+    'exclude' => [
+        'password',
+        'remember_token',
+        '*_token',
+        '*_secret',
+        'two_factor_recovery_codes',
+        'api_key',
+    ],
+
+    'timestamps' => true,
+
+    'resolve_foreign_keys' => true,
+
+    /*
+    |--------------------------------------------------------------------------
     | Formatting
     |--------------------------------------------------------------------------
+    |
+    | Dates are converted to this timezone (null means the app timezone) and
+    | written with datetime_format, or date_format for attributes cast to
+    | date. Lists (to-many relations) are joined with list_separator.
+    |
     */
+
+    'timezone' => null,
 
     'datetime_format' => 'Y-m-d H:i:s',
 
     'date_format' => 'Y-m-d',
+
+    'list_separator' => ', ',
 
     /*
     |--------------------------------------------------------------------------

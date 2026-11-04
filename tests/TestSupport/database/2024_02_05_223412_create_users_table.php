@@ -16,6 +16,9 @@ class CreateUsersTable extends Migration
             $table->boolean('is_admin')->default(false);
             $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
             $table->string('status')->index();
+            $table->date('birthday')->nullable();
+            $table->json('settings')->nullable();
+            $table->string('api_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
