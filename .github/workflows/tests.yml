@@ -7,6 +7,11 @@ on:
             - main
             - next-gen
 
+# The unreleased javaabu/* dependencies come from VCS repositories; the job's own
+# token keeps Composer within GitHub's API limits
+env:
+    COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ github.token }}"}}'
+
 jobs:
     pint:
         runs-on: ubuntu-latest
@@ -45,6 +50,7 @@ jobs:
                 uses: actions/setup-node@v5
                 with:
                     node-version: 22
+                    package-manager-cache: false
 
             # The default store is inside a node_modules folder, which breaks the declaration
             # build of @javaabu/forms (installed from git and built on install)
