@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -203,6 +204,14 @@ abstract class ModelExport implements Exportable
     public function label(): string
     {
         return __(Str::of(class_basename($this->modelClass()))->plural()->headline()->toString());
+    }
+
+    /**
+     * Make the export for the exports API (`POST exports`), e.g. with filters from the request
+     */
+    public static function fromRequest(Request $request): static
+    {
+        return new static;
     }
 
     /**

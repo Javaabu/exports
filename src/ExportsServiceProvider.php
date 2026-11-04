@@ -2,8 +2,12 @@
 
 namespace Javaabu\Exports;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\Exports\Commands\PruneExportsCommand;
+use Javaabu\Exports\Policies\ExportPolicy;
+use Javaabu\Exports\Routing\ExportRoutes;
+use Javaabu\Permissions\Permissions;
 
 class ExportsServiceProvider extends ServiceProvider
 {
@@ -15,6 +19,10 @@ class ExportsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'exports');
+
+        $this->registerRouteMacros();
+        $this->registerPermissions();
 
         if ($this->app->runningInConsole()) {
             $this->registerMigrations();
@@ -24,6 +32,33 @@ class ExportsServiceProvider extends ServiceProvider
                 PruneExportsCommand::class,
             ]);
         }
+    }
+
+    protected function registerRouteMacros(): void
+    {
+        Route::macro('exports', function (array $options = []) {
+            ExportRoutes::register($this, $options);
+        });
+    }
+
+    /**
+     * view_exports, view_others_exports, delete_exports, delete_others_exports, and the
+     * default policy, which the app can override
+     */
+    protected function registerPermissions(): void
+    {
+        if (! config('exports.register_permissions', true)) {
+            return;
+        }
+
+        Permissions::register('exports', [
+            'view_exports' => 'View own exports',
+            'view_others_exports' => 'View other users\' exports',
+            'delete_exports' => 'Delete own exports',
+            'delete_others_exports' => 'Delete other users\' exports',
+        ], label: 'Exports');
+
+        Permissions::policy(Exports::exportModel(), config('exports.policy', ExportPolicy::class));
     }
 
     protected function registerMigrations(): void
@@ -42,5 +77,9 @@ class ExportsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'exports-migrations');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/exports'),
+        ], 'exports-views');
     }
 }

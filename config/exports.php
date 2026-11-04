@@ -1,9 +1,11 @@
 <?php
 
+use Javaabu\Exports\Http\Controllers\ExportsController;
 use Javaabu\Exports\Jobs\ProcessExport;
 use Javaabu\Exports\Models\Export;
 use Javaabu\Exports\Notifications\ExportCompletedNotification;
 use Javaabu\Exports\Notifications\ExportFailedNotification;
+use Javaabu\Exports\Policies\ExportPolicy;
 
 return [
 
@@ -234,5 +236,38 @@ return [
     'routes' => [
         'signed_download' => 'exports.signed-download',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Views
+    |--------------------------------------------------------------------------
+    |
+    | The pages the exports routes render: blade (javaabu/forms components) or
+    | inertia (React pages shipped through javaabu/manifest). Requests that
+    | expect JSON always get JSON.
+    |
+    */
+
+    'views' => env('EXPORTS_VIEWS', 'blade'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Controllers and authorization
+    |--------------------------------------------------------------------------
+    |
+    | Replace the controller with a subclass, or pass `controller` to
+    | Route::exports(). The policy here is the package default; apps can also
+    | override it with config('permissions.policies') or Gate::policy().
+    | Turn off register_permissions to register your own.
+    |
+    */
+
+    'controllers' => [
+        'exports' => ExportsController::class,
+    ],
+
+    'policy' => ExportPolicy::class,
+
+    'register_permissions' => true,
 
 ];

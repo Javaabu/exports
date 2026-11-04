@@ -3,26 +3,57 @@
 namespace Javaabu\Exports\Tests;
 
 use Javaabu\Exports\ExportsServiceProvider;
+use Javaabu\Exports\Tests\TestSupport\Models\Admin;
+use Javaabu\Exports\Tests\TestSupport\Models\User;
 use Javaabu\Exports\Tests\TestSupport\Providers\TestServiceProvider;
+use Javaabu\Permissions\Models\Permission;
+use Javaabu\Permissions\Models\Role;
+use Javaabu\Permissions\PermissionsServiceProvider;
 use OpenSpout\Reader\CSV\Reader as CsvReader;
 use OpenSpout\Reader\ODS\Reader as OdsReader;
 use OpenSpout\Reader\ReaderInterface;
 use OpenSpout\Reader\XLSX\Reader as XlsxReader;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Spatie\Permission\PermissionServiceProvider;
 use ZipArchive;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function setUp(): void
+    protected function defineEnvironment($app): void
     {
-        parent::setUp();
+        $app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
+        $app['config']->set('permission.models.permission', Permission::class);
+        $app['config']->set('permission.models.role', Role::class);
+        $app['config']->set('permissions.guards', ['web', 'web_admin']);
 
-        $this->app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
+        $app['config']->set('auth.guards', [
+            'web' => [
+                'driver' => 'session',
+                'provider' => 'users',
+            ],
+            'web_admin' => [
+                'driver' => 'session',
+                'provider' => 'admins',
+            ],
+        ]);
+
+        $app['config']->set('auth.providers', [
+            'users' => [
+                'driver' => 'eloquent',
+                'model' => User::class,
+            ],
+            'admins' => [
+                'driver' => 'eloquent',
+                'model' => Admin::class,
+            ],
+        ]);
     }
 
     protected function getPackageProviders($app): array
     {
         return [
+            PermissionServiceProvider::class,
+            PermissionsServiceProvider::class,
             ExportsServiceProvider::class,
             TestServiceProvider::class,
         ];

@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('password');
             $table->boolean('is_admin')->default(false);
-            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('role_id')->nullable()->constrained('test_roles')->nullOnDelete();
             $table->string('status')->index();
             $table->date('birthday')->nullable();
             $table->json('settings')->nullable();

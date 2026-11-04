@@ -14,3 +14,6 @@ All notable changes will be documented in this file.
 - `queue()` writes exports on the queue and returns an `Export` record (status, progress, file, user morph). `ProcessExport` streams the file to a configurable disk, saves progress, stops when cancelled, and notifies the user (mail by default) with a signed, expiring download link.
 - `exports:prune` deletes expired exports and their files.
 - Export events: `ExportStarted`, `ExportProgressed`, `ExportCompleted`, `ExportFailed`, `ExportCancelled`.
+- `Route::exports()` registers the exports routes (index, store, show, download, cancel, destroy, signed download) with the app's prefix, name, guard and middleware. `ExportsController` answers JSON or renders pages, and can be replaced from config, the macro or the container.
+- `ExportPolicy` and the permissions `view_exports`, `view_others_exports`, `delete_exports`, `delete_others_exports`, registered with javaabu/permissions. Exports belong to any user model through a morph; nothing assumes the `web` guard.
+- `Exports::register('users', UsersExport::class)` lets the API start an export by name.

@@ -10,6 +10,8 @@ class Role extends Authenticatable
 {
     use HasFactory;
 
+    protected $table = 'test_roles';
+
     protected static function newFactory()
     {
         return new RoleFactory;

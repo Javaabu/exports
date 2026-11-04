@@ -54,7 +54,7 @@ class StreamingTest extends TestCase
         UsersExport::make()->writeTo($path = TemporaryFile::path(Formats::CSV));
 
         $role_queries = collect(DB::getQueryLog())
-            ->filter(fn (array $query) => str_starts_with($query['query'], 'select * from "roles"'));
+            ->filter(fn (array $query) => str_starts_with($query['query'], 'select * from "test_roles"'));
 
         $this->assertCount(3, $role_queries);
         $this->assertEquals('ވެރިޔާ', $this->readSpreadsheet($path)[25][10]);

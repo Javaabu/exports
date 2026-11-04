@@ -10,12 +10,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Javaabu\Exports\Tests\TestSupport\Enums\UserStatuses;
 use Javaabu\Exports\Tests\TestSupport\Factories\UserFactory;
+use Javaabu\Permissions\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use HasFactory;
+    use HasRoles;
     use Notifiable;
     use SoftDeletes;
+
+    protected string $guard_name = 'web';
 
     protected $hidden = [
         'password',
