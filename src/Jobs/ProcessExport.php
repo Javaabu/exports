@@ -42,14 +42,33 @@ class ProcessExport implements ShouldQueue
 
     public bool $deleteWhenMissingModels = true;
 
+    /** The locale the export was queued in, used for its headings and values */
+    public ?string $locale;
+
     public function __construct(
         public Export $export,
         public Exportable $exportable,
     ) {
         $this->timeout = (int) config('exports.queue.timeout', 3600);
+        $this->locale = app()->getLocale();
     }
 
     public function handle(SpreadsheetWriter $writer): void
+    {
+        $previous_locale = app()->getLocale();
+
+        if ($this->locale) {
+            app()->setLocale($this->locale);
+        }
+
+        try {
+            $this->process($writer);
+        } finally {
+            app()->setLocale($previous_locale);
+        }
+    }
+
+    protected function process(SpreadsheetWriter $writer): void
     {
         $export = $this->export;
 

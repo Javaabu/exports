@@ -244,6 +244,29 @@ class QueuedExportsTest extends TestCase
     }
 
     #[Test]
+    public function it_writes_the_file_in_the_locale_it_was_queued_in(): void
+    {
+        Queue::fake();
+
+        app()->setLocale('dv');
+
+        $export = UsersExport::make()->queue(null, 'csv', 'users');
+
+        app()->setLocale('en');
+
+        Queue::assertPushed(ProcessExport::class, function (ProcessExport $job) {
+            $job->handle(app(SpreadsheetWriter::class));
+
+            return true;
+        });
+
+        $rows = $this->readSpreadsheet(Storage::disk('exports')->path($export->fresh()->path));
+
+        $this->assertEquals(['އައިޑީ', 'އީމެއިލް', 'ނަން'], array_slice($rows[0], 0, 3));
+        $this->assertEquals('en', app()->getLocale());
+    }
+
+    #[Test]
     public function it_does_not_notify_when_notifications_are_off(): void
     {
         Notification::fake();

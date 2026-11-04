@@ -25,7 +25,7 @@ class Broadcasting
         $enabled = config('exports.broadcasting.enabled', 'auto');
 
         if ($enabled !== 'auto') {
-            return (bool) $enabled;
+            return filter_var($enabled, FILTER_VALIDATE_BOOLEAN);
         }
 
         if (! class_exists(static::$reverb_class)) {

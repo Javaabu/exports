@@ -148,6 +148,9 @@ class BroadcastingTest extends TestCase
 
         config()->set('exports.broadcasting.enabled', true);
         $this->assertTrue(Broadcasting::enabled());
+
+        config()->set('exports.broadcasting.enabled', 'false');
+        $this->assertFalse(Broadcasting::enabled());
     }
 
     #[Test]

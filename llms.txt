@@ -1,0 +1,42 @@
+# javaabu/exports
+
+> Streaming model exports for Laravel. Extend ModelExport (or use IterableExport) and download, store or queue CSV, XLSX and ODS files with flat memory. Defaults leave out hidden attributes and secrets, replace foreign keys with related names, and produce readable, translated headings and values. Queued exports are tracked by an Export model with progress, cancellation, notifications with signed links, and pruning. Route::exports() adds an exports page and JSON API (Blade or Inertia React) with live progress over Reverb or polling, a policy and permissions through javaabu/permissions.
+
+Paths are relative to this file. In a project, that's vendor/javaabu/exports/.
+
+## Rules
+
+- Write exports as classes extending `Javaabu\Exports\ModelExport` with `modelClass()`; call them with `UsersExport::make($query)->download()`, `->store()`, `->writeTo()` or `->queue($user)`. Don't use maatwebsite/excel's `Excel::download()` with them: v2 doesn't use maatwebsite.
+- Choose columns in `columns()`: attribute names, relation names, dot notation (`role.name`, `organizations.name`) or `Javaabu\Exports\Columns\Column::make()` with `label()`, `format()` or `value()`. Don't eager load or map by hand; the export eager loads what the columns need.
+- Customise one value by overriding `formatValue(Model $model, string $attribute, mixed $value)` and calling `parent::formatValue()` for the rest.
+- Use `queue()` for anything that can be more than a few tens of thousands of rows; `download()` runs during the request.
+- Keep an export's constructor state serializable and small (a query builder, ids, filters). Builders are serialized as SQL; models as identifiers. Don't pass loaded collections or closures other than eager-load constraints.
+- Keep the primary key in any `select()`: exports read with `lazyById()`. An `orderBy()` switches to `lazy()` (offset paging).
+- Register exports users may start from the exports page with `Javaabu\Exports\Exports::register('users', UsersExport::class)` in a service provider's `boot()`. Who may run one is the export's `authorize($user)` (default: `viewAny` on the model).
+- Register the routes yourself with `Route::exports([...])` inside the app's route group; pass `guard`, `prefix` and `name` for other guards. They aren't loaded automatically.
+- Permissions are `view_exports`, `view_others_exports`, `delete_exports`, `delete_others_exports`. Run `php artisan permissions:sync`. Override the policy with `config('permissions.policies')` or `Gate::policy()`, never by editing the package.
+- Schedule `exports:prune` daily.
+- Headings and values go through `__()`; add Dhivehi to `lang/dv.json`. Use Thaana in tests of user-facing exports.
+
+## Docs
+
+- [Introduction](docs/intro.md): what the package does
+- [Requirements](docs/requirements.md): PHP, Laravel, extensions and optional packages
+- [Installation & Setup](docs/installation-and-setup.md): installing, migrating, permissions, routes, pruning, publishing
+- [Upgrading from v1](docs/upgrading.md): why maatwebsite/excel was dropped, changed defaults, migrating exports
+- [Model exports](docs/basic-usage/model-exports.md): default columns, columns(), Column, headings, values, the query, IterableExport
+- [Downloading and storing](docs/basic-usage/downloading-and-storing.md): formats, download(), store(), writeTo(), formula escaping
+- [Queued exports](docs/basic-usage/queued-exports.md): queue(), the job, the Export model, cancelling, notifications, events, pruning, testing
+- [Exports page and API](docs/basic-usage/exports-page-and-api.md): Route::exports(), Exports::register(), the JSON API, pages
+- [Performance](docs/advanced-usage/performance.md): the 1M-row benchmark, chunked reading, tips
+- [Permissions and policies](docs/advanced-usage/permissions-and-policies.md): permissions, ExportPolicy, overriding it, multiple guards
+- [Live progress](docs/advanced-usage/live-progress.md): Reverb, channels, events, listening, polling
+- [Overriding controllers and views](docs/advanced-usage/overriding-controllers-and-views.md): custom controllers, Blade and Inertia pages and their props
+- [Dhivehi and translations](docs/advanced-usage/translations.md): translated strings, Thaana in files, strings to review
+- [Configuration](docs/advanced-usage/configuration.md): every option in config/exports.php
+- [API reference](docs/advanced-usage/api-reference.md): every public class and method
+- [AI assistants](docs/ai-assistants.md): Laravel Boost, and using these docs from other assistants
+- [Questions and Security](docs/questions-and-security.md): where to get help
+- [Changelog](docs/changelog.md): where changes are listed
+- [About Us](docs/about-us.md): Javaabu
+- [Contributing to the docs](docs/contributing-to-docs.md): how the docs are built
