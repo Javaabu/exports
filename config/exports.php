@@ -1,5 +1,10 @@
 <?php
 
+use Javaabu\Exports\Jobs\ProcessExport;
+use Javaabu\Exports\Models\Export;
+use Javaabu\Exports\Notifications\ExportCompletedNotification;
+use Javaabu\Exports\Notifications\ExportFailedNotification;
+
 return [
 
     /*
@@ -143,6 +148,91 @@ return [
     'xlsx' => [
         'auto_size' => true,
         'max_column_width' => 60,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The exports table and model
+    |--------------------------------------------------------------------------
+    |
+    | user_key_type is the key type of the models that start exports (any
+    | model, through the `user` morph): integer, uuid, ulid or string. Set it
+    | before running the migration.
+    |
+    */
+
+    'table' => 'exports',
+
+    'user_key_type' => 'integer',
+
+    'models' => [
+        'export' => Export::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queued exports
+    |--------------------------------------------------------------------------
+    |
+    | connection and queue null mean the app's defaults. Progress is saved
+    | (and broadcast) every progress_every rows; null means chunk_size.
+    | The job can be replaced with a subclass of ProcessExport.
+    |
+    */
+
+    'queue' => [
+        'connection' => env('EXPORTS_QUEUE_CONNECTION'),
+        'queue' => env('EXPORTS_QUEUE'),
+        'timeout' => 3600,
+        'progress_every' => null,
+        'job' => ProcessExport::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Expiry
+    |--------------------------------------------------------------------------
+    |
+    | Files can be downloaded for expire_after_days, then `exports:prune`
+    | deletes them. Signed links in notifications last signed_url_minutes,
+    | or until the file expires if that's sooner.
+    |
+    */
+
+    'expire_after_days' => 7,
+
+    'signed_url_minutes' => 1440,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+    | The user who started a queued export is notified when it completes or
+    | fails, if their model uses Notifiable. Set a notification to null to
+    | turn it off.
+    |
+    */
+
+    'notifications' => [
+        'enabled' => true,
+        'channels' => ['mail'],
+        'completed' => ExportCompletedNotification::class,
+        'failed' => ExportFailedNotification::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Routes
+    |--------------------------------------------------------------------------
+    |
+    | The name of the signed download route used in notifications. Route::exports()
+    | registers it as {name}.signed-download; change this if you change the name.
+    |
+    */
+
+    'routes' => [
+        'signed_download' => 'exports.signed-download',
     ],
 
 ];

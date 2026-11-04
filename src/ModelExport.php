@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -19,9 +20,11 @@ use Javaabu\Exports\Columns\Column;
 use Javaabu\Exports\Concerns\WritesFiles;
 use Javaabu\Exports\Contracts\Exportable;
 use Javaabu\Exports\Contracts\HasExportHeadings;
+use Javaabu\Exports\Support\SerializableQuery;
 use JsonSerializable;
 use ReflectionMethod;
 use ReflectionNamedType;
+use ReflectionObject;
 use Throwable;
 use UnitEnum;
 
@@ -34,6 +37,7 @@ use UnitEnum;
  */
 abstract class ModelExport implements Exportable
 {
+    use SerializesAndRestoresModelIdentifiers;
     use WritesFiles;
 
     /** Attributes tried, in order, to show a related model */
@@ -106,8 +110,12 @@ abstract class ModelExport implements Exportable
     {
         $query = $this->query ?? $this->modelClass()::query();
 
-        if ($relations = $this->eagerLoads()) {
-            $query->with($relations);
+        $builder = $query instanceof Relation ? $query->getQuery() : $query;
+
+        $missing = array_diff($this->eagerLoads(), array_keys($builder->getEagerLoads()));
+
+        if ($missing) {
+            $query->with(array_values($missing));
         }
 
         return $query;
@@ -187,6 +195,70 @@ abstract class ModelExport implements Exportable
     public function filename(): string
     {
         return Str::of(class_basename($this->modelClass()))->plural()->kebab()->toString();
+    }
+
+    /**
+     * The name shown in the exports list, e.g. "Users"
+     */
+    public function label(): string
+    {
+        return __(Str::of(class_basename($this->modelClass()))->plural()->headline()->toString());
+    }
+
+    /**
+     * Whether the user may run this export. Defaults to the `viewAny` ability on the model.
+     */
+    public function authorize(?Model $user): bool
+    {
+        return $user !== null && $user->can('viewAny', $this->modelClass());
+    }
+
+    /**
+     * Serialize for the queue: models become identifiers, a query becomes a SerializableQuery
+     *
+     * @return array<string, mixed>
+     */
+    public function __serialize(): array
+    {
+        $data = [];
+
+        foreach ((new ReflectionObject($this))->getProperties() as $property) {
+            if ($property->isStatic() || ! $property->isInitialized($this)) {
+                continue;
+            }
+
+            $name = $property->getName();
+            $value = $property->getValue($this);
+
+            $data[$name] = match (true) {
+                $name === 'query' && $value !== null => SerializableQuery::from($value),
+                $name === 'resolved_columns' => null,
+                $name === 'relation_names' => [],
+                default => $this->getSerializedPropertyValue($value),
+            };
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $reflection = new ReflectionObject($this);
+
+        foreach ($data as $name => $value) {
+            if (! $reflection->hasProperty($name)) {
+                continue;
+            }
+
+            $value = $value instanceof SerializableQuery
+                ? $value->toBuilder()
+                : $this->getRestoredPropertyValue($value);
+
+            $reflection->getProperty($name)->setValue($this, $value);
+        }
     }
 
     /**

@@ -3,5 +3,7 @@
     "No": "ނޫން",
     "ID": "އައިޑީ",
     "Name": "ނަން",
-    "Email": "އީމެއިލް"
+    "Email": "އީމެއިލް",
+    "Your :name export is ready": "ތިބާގެ :name އެކްސްޕޯޓް ތައްޔާރުވެއްޖެ",
+    "Your :name export failed": "ތިބާގެ :name އެކްސްޕޯޓް ނާކާމިޔާބުވެއްޖެ"
 }

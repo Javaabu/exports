@@ -11,3 +11,6 @@ All notable changes will be documented in this file.
 - `columns()` with dot-notation relations and `Column` definitions (label, format, computed value).
 - `IterableExport` for rows that aren't models.
 - CSV values that would run as formulas are escaped; XLSX strings are never written as formulas. XLSX columns are sized to fit, and sheets are right-to-left in Dhivehi.
+- `queue()` writes exports on the queue and returns an `Export` record (status, progress, file, user morph). `ProcessExport` streams the file to a configurable disk, saves progress, stops when cancelled, and notifies the user (mail by default) with a signed, expiring download link.
+- `exports:prune` deletes expired exports and their files.
+- Export events: `ExportStarted`, `ExportProgressed`, `ExportCompleted`, `ExportFailed`, `ExportCancelled`.

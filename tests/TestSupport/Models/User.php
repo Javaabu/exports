@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Javaabu\Exports\Tests\TestSupport\Enums\UserStatuses;
 use Javaabu\Exports\Tests\TestSupport\Factories\UserFactory;
 
 class User extends Authenticatable
 {
     use HasFactory;
+    use Notifiable;
     use SoftDeletes;
 
     protected $hidden = [

@@ -2,12 +2,15 @@
 
 namespace Javaabu\Exports\Concerns;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
 use Javaabu\Exports\Contracts\Exportable;
+use Javaabu\Exports\Enums\ExportStatuses;
 use Javaabu\Exports\Enums\Formats;
+use Javaabu\Exports\Exports;
+use Javaabu\Exports\Jobs\ProcessExport;
+use Javaabu\Exports\Models\Export;
 use Javaabu\Exports\Support\TemporaryFile;
 use Javaabu\Exports\Writers\SpreadsheetWriter;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -75,6 +78,48 @@ trait WritesFiles
     }
 
     /**
+     * Write the export on the queue. Returns the Export record that tracks it; the user
+     * (any model) is notified when the file is ready.
+     *
+     * The export object is serialized onto the queue: keep its state small (ids, filters,
+     * a query builder) rather than loaded collections.
+     */
+    public function queue(
+        ?Model $user = null,
+        Formats|string|null $format = null,
+        ?string $filename = null,
+        ?string $disk = null,
+    ): Export {
+        $format = Formats::resolve($format, $filename);
+
+        $export = Exports::newExportModel();
+
+        $export->forceFill([
+            'type' => Exports::typeOf($this),
+            'export_class' => static::class,
+            'name' => $this->label(),
+            'format' => $format,
+            'status' => ExportStatuses::PENDING,
+            'disk' => $disk ?? config('exports.disk') ?? config('filesystems.default'),
+            'filename' => $this->downloadName($filename, $format),
+        ]);
+
+        if ($user) {
+            $export->user()->associate($user);
+        }
+
+        $export->save();
+
+        $job_class = config('exports.queue.job', ProcessExport::class);
+
+        dispatch(new $job_class($export, $this))
+            ->onConnection(config('exports.queue.connection'))
+            ->onQueue(config('exports.queue.queue'));
+
+        return $export;
+    }
+
+    /**
      * The file name for a download: the given name, with the format's extension added if missing,
      * or the export's file name and the current time
      */
@@ -93,18 +138,6 @@ trait WritesFiles
 
     protected function putOnDisk(string $local_path, string $path, ?string $disk): void
     {
-        $stream = fopen($local_path, 'r');
-
-        try {
-            $stored = Storage::disk($disk ?? config('exports.disk'))->writeStream($path, $stream);
-        } finally {
-            if (is_resource($stream)) {
-                fclose($stream);
-            }
-        }
-
-        if ($stored === false) {
-            throw new RuntimeException("Could not write the export to {$path}.");
-        }
+        TemporaryFile::moveToDisk($local_path, $path, $disk ?? config('exports.disk'));
     }
 }

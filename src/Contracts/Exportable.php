@@ -30,4 +30,9 @@ interface Exportable
      * The file name without an extension, e.g. `users`
      */
     public function filename(): string;
+
+    /**
+     * The name shown in the exports list and notifications, e.g. "Users"
+     */
+    public function label(): string;
 }

@@ -3,6 +3,7 @@
 namespace Javaabu\Exports;
 
 use Closure;
+use Illuminate\Support\Str;
 use Javaabu\Exports\Concerns\WritesFiles;
 use Javaabu\Exports\Contracts\Exportable;
 
@@ -57,5 +58,10 @@ class IterableExport implements Exportable
     public function filename(): string
     {
         return $this->filename;
+    }
+
+    public function label(): string
+    {
+        return __(Str::headline($this->filename));
     }
 }
