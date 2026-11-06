@@ -76,6 +76,8 @@ Exports::register('users', UsersExport::class);
 
 Permissions: `view_exports`, `view_others_exports`, `delete_exports`, `delete_others_exports`. Run `php artisan permissions:sync`. Schedule `exports:prune` daily.
 
+Pages: `exports.views` is `blade` (default) or `inertia`. Blade-only apps need only manifest's Vite plugin; don't install React for them. For Inertia, run `php artisan manifest:check` (or `--scope=pages`) and install what it lists: `@javaabu/forms`, `@javaabu/onu`, `react`, `react-dom`, `@inertiajs/react`.
+
 ## Rules
 
 - Don't load models yourself (`User::all()`, `->get()`) or map rows by hand; pass a query and let the export stream it.

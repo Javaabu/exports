@@ -9,6 +9,7 @@ use Javaabu\Exports\Policies\ExportPolicy;
 use Javaabu\Exports\Routing\ExportRoutes;
 use Javaabu\Exports\Support\Broadcasting;
 use Javaabu\Manifest\Concerns\RegistersAssets;
+use Javaabu\Manifest\Enums\NpmScopes;
 use Javaabu\Manifest\Package;
 use Javaabu\Permissions\Permissions;
 
@@ -42,9 +43,11 @@ class ExportsServiceProvider extends ServiceProvider
     }
 
     /**
-     * The Inertia pages (exports::Exports/Index), the components apps can import as
+     * The Inertia pages (exports::Exports/Index), the components apps import through
+     * the package's alias, and the progress script the Blade pages load.
      *
-     * @javaabu/exports, and the progress script the Blade pages load
+     * The Blade script imports no npm packages, so every npm dependency is for the
+     * pages only, and Blade-only apps aren't asked to install React.
      */
     protected function registerFrontendAssets(): void
     {
@@ -60,7 +63,7 @@ class ExportsServiceProvider extends ServiceProvider
                     'react' => '^18.3 || ^19.0',
                     'react-dom' => '^18.3 || ^19.0',
                     '@inertiajs/react' => '^2.0 || ^3.0',
-                ]);
+                ], for: NpmScopes::PAGES);
         });
     }
 

@@ -29,6 +29,7 @@
 - Strings are written as text cells; never let user data become a formula.
 - Nothing may assume the `web` guard or `App\Models\User`. Type-hint users as `Model`; exports belong to users through the `user` morph. Test on both guards.
 - Reverb and Inertia are optional: feature-detect them, keep them in `suggest`, and test both ways.
+- npm packages only the React pages or `@javaabu/exports` imports use go in the manifest `npm(..., for: NpmScopes::PAGES)` call. Only packages that a registered Blade script (`exports::progress`) imports go in the assets scope. `NpmRequirementsTest` checks that a Blade-only app isn't asked for React.
 - v1 subclasses must keep working: don't rename or retype `ModelExport` hooks without an entry in `docs/upgrading.md`.
 - Every user-facing string goes through `__()` with an English key, and gets a line in `lang/en.json` and `lang/dv.json` (`TranslationsTest` checks). Use Thaana in tests of user-facing behaviour. List uncertain translations in `docs/advanced-usage/translations.md`. Views use logical CSS only (`ms-`, `pe-`, `start-`), never `left`/`right`.
 - Every change needs tests, docs (linked from `llms.txt`), the Boost skill if it changes how the package is used, and a line in `CHANGELOG.md`.

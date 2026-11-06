@@ -19,3 +19,4 @@ All notable changes will be documented in this file.
 - `Exports::register('users', UsersExport::class)` lets the API start an export by name.
 - Live progress: export events broadcast on private channels (`exports.{uuid}`, `exports.owner.{type}.{id}`) when laravel/reverb is installed and broadcasting is on (`exports.broadcasting.enabled`: auto, true or false). The API tells pages whether to listen or to poll, and how often.
 - Exports pages in Blade (javaabu/forms v2 components) and Inertia React (TypeScript, @javaabu/forms and @javaabu/onu, shipped through javaabu/manifest), chosen with `exports.views`, with live progress, in English and Dhivehi, right-to-left ready.
+- The React pages' npm packages are declared in manifest's `pages` scope, so Blade-only apps' `manifest:check` doesn't ask for React.

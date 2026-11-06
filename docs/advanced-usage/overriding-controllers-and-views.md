@@ -45,6 +45,8 @@ The pages use Tailwind utilities from Onu's theme (logical ones only, so they wo
 @source "../../vendor/javaabu/exports/resources/views";
 ```
 
+The Blade pages need no React. The progress script imports no npm packages, so `php artisan manifest:check` asks a Blade-only app for nothing beyond `vite` and `laravel-vite-plugin` on exports' behalf. javaabu/forms may list its own Blade assets' packages.
+
 ## Inertia React
 
 The pages are `exports::Exports/Index` and `exports::Exports/Show`, written in TypeScript with [@javaabu/forms](https://github.com/Javaabu/react-forms) and [@javaabu/onu](https://www.npmjs.com/package/@javaabu/onu). javaabu/manifest ships them to your app; resolve them with `resolvePage()`:
@@ -70,7 +72,7 @@ composer require inertiajs/inertia-laravel
 php artisan manifest:check   # prints the install command for anything missing
 ```
 
-They need `@javaabu/forms`, `@javaabu/onu`, `react`, `react-dom` and `@inertiajs/react`. Wrap your app in `FormsProvider` (with the Onu and Inertia adapters) as @javaabu/forms describes, so forms submit as Inertia visits. Your persistent layout wraps the pages as it wraps your own.
+They need `@javaabu/forms`, `@javaabu/onu`, `react`, `react-dom` and `@inertiajs/react`. exports declares them for its pages only (manifest's `pages` scope). `manifest:check` asks for them once your `package.json` has an Inertia adapter (`@inertiajs/react`), or when you run `php artisan manifest:check --scope=pages`. Importing `@javaabu/exports` in your own React code needs the same packages. Wrap your app in `FormsProvider` (with the Onu and Inertia adapters) as @javaabu/forms describes, so forms submit as Inertia visits. Your persistent layout wraps the pages as it wraps your own.
 
 The pages' text comes from the server, translated, in the `strings` prop, so they're in Dhivehi when the app's locale is `dv`. For live progress over Reverb, set up Laravel Echo as `window.Echo`; otherwise the pages poll.
 
