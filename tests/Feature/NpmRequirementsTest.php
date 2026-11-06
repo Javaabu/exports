@@ -54,15 +54,11 @@ class NpmRequirementsTest extends TestCase
 
         $rows = $this->rowsNeededByExports();
 
-        // javaabu/forms' own Blade assets are checked too; only look at what exports asks for
+        // Other installed packages (javaabu/forms, javaabu/permissions) are checked too and
+        // declare their own needs; only what exports asks for is under test here
         $this->assertEquals(['laravel-vite-plugin', 'vite'], array_keys($rows));
         $this->assertEquals(['ok', 'ok'], array_column($rows, 'status'));
-
-        $all_names = array_column($this->check(), 'name');
-
-        foreach (['react', 'react-dom', '@inertiajs/react', '@javaabu/forms'] as $react_package) {
-            $this->assertNotContains($react_package, $all_names);
-        }
+        $this->assertEquals([['assets'], ['assets']], array_column($rows, 'scopes'));
     }
 
     #[Test]
