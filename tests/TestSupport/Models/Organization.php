@@ -12,7 +12,7 @@ class Organization extends Authenticatable
 
     protected static function newFactory()
     {
-        return new OrganizationFactory();
+        return new OrganizationFactory;
     }
 
     public function getMorphClass()

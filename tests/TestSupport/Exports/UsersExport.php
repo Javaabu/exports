@@ -7,7 +7,6 @@ use Javaabu\Exports\Tests\TestSupport\Models\User;
 
 class UsersExport extends ModelExport
 {
-
     public function modelClass(): string
     {
         return User::class;

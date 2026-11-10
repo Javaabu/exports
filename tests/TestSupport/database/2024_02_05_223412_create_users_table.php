@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration {
+class CreateUsersTable extends Migration
+{
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -13,8 +14,11 @@ class CreateUsersTable extends Migration {
             $table->string('name');
             $table->string('password');
             $table->boolean('is_admin')->default(false);
-            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('role_id')->nullable()->constrained('test_roles')->nullOnDelete();
             $table->string('status')->index();
+            $table->date('birthday')->nullable();
+            $table->json('settings')->nullable();
+            $table->string('api_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

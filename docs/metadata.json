@@ -1,5 +1,5 @@
 {
     "name": "Exports",
-    "description": "Handles Laravel exports using maatwebsite/excel",
-    "version": "1"
+    "description": "Streaming model exports for Laravel: smart defaults, CSV, XLSX and ODS, background jobs and an exports UI with live progress",
+    "version": "2"
 }
